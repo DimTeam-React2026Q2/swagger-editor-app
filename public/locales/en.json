@@ -1,0 +1,27 @@
+{
+  "About": {
+    "title": "About Our Team",
+    "description": "Welcome to our Swagger Client application page. This project was built by dedicated students during the React course.",
+    "course": {
+      "title": "RS School React Course",
+      "description": "The Rolling Scopes School is a free, community-driven educational initiative. This application serves as a final project demonstrating skills in Next.js, TypeScript, and modern frontend architecture.",
+      "linkLabel": "Learn more about RS School"
+    },
+    "team": {
+      "title": "Meet the Developers",
+      "marina": {
+        "name": "Maryna (Team Lead)",
+        "role": "Core Architecture & Documentation Viewer"
+      },
+      "mark": {
+        "name": "Mark",
+        "role": "Swagger Live Editor & Authentication"
+      },
+      "dima": {
+        "name": "Dima",
+        "role": "Interactive REST Client & History Service"
+      },
+      "githubLabel": "GitHub Profile"
+    }
+  }
+}
