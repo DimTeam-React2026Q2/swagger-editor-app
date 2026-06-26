@@ -8,7 +8,7 @@ type HeaderProps = {
 
 export default function Header({ isLoggedin }: HeaderProps): React.JSX.Element {
   return (
-    <header className="grid grid-cols-3 items-center bg-[#173647] p-5 text-white">
+    <header className="grid grid-cols-3 items-center bg-[#173647] p-5 text-base">
       <Link href="/" className="flex items-center gap-2">
         <Image
           src="/swagger-logo.svg"
