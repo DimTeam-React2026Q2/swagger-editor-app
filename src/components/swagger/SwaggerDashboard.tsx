@@ -6,6 +6,7 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from "@/components/ui/resizable";
+import { SwaggerViewer } from "./SwaggerViewer";
 
 export default function SwaggerDashboard(): ReactElement {
   const [schemaText, setSchemaText] = useState<string>("");
@@ -72,9 +73,17 @@ export default function SwaggerDashboard(): ReactElement {
             <div className="custom-scrollbar-light flex-1 overflow-y-auto bg-white p-6">
               {schemaText.trim() ? (
                 <div className="animate-fade-in">
-                  <pre className="overflow-x-auto rounded-md border border-zinc-200 bg-zinc-50 p-4 font-mono text-[13px] whitespace-pre-wrap text-zinc-700">
-                    {schemaText}
-                  </pre>
+                  <ResizablePanel
+                    defaultSize={50}
+                    minSize={25}
+                    className="h-full w-full"
+                  >
+                    <div className="flex h-full flex-col bg-white text-zinc-900">
+                      <div className="custom-scrollbar-light flex-1 overflow-y-auto bg-white p-6">
+                        <SwaggerViewer schemaText={schemaText} />
+                      </div>
+                    </div>
+                  </ResizablePanel>
                 </div>
               ) : (
                 <div className="flex h-full flex-col items-center justify-center p-8 text-center select-none">
