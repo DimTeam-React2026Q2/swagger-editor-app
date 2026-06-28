@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SignOutButton from "@/components/auth/SignOutButton";
+import { Link } from "@/i18n/navigation";
 
 type HeaderProps = {
   isLoggedin: boolean;
