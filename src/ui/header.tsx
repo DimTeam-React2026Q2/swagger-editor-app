@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import SignOutButton from "@/components/auth/SignOutButton";
 
 type HeaderProps = {
   isLoggedin: boolean;
@@ -25,12 +26,23 @@ export default function Header({ isLoggedin }: HeaderProps): React.JSX.Element {
         </Button>
       </div>
       <nav className="flex items-center justify-end gap-2">
-        <Button variant="ghost" asChild>
-          <Link href="/history">{isLoggedin ? "History" : "Sign in"}</Link>
-        </Button>
-        <Button variant="ghost" type="button">
-          {isLoggedin ? "Sign up" : "Sign out"}
-        </Button>
+        {isLoggedin ? (
+          <>
+            <Button variant="ghost" asChild>
+              <Link href="/history">History</Link>
+            </Button>
+            <SignOutButton />
+          </>
+        ) : (
+          <>
+            <Button variant="ghost" asChild>
+              <Link href="/sign-in">Sign in</Link>
+            </Button>
+            <Button variant="ghost" asChild>
+              <Link href="/sign-up">Sign up</Link>
+            </Button>
+          </>
+        )}
       </nav>
     </header>
   );
