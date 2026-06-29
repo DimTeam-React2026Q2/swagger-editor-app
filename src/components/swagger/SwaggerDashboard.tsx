@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, ReactElement, useEffect } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  type ChangeEvent,
+  type ReactElement,
+} from "react";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -8,8 +14,27 @@ import {
 } from "@/components/ui/resizable";
 import { SwaggerViewer } from "./SwaggerViewer";
 
+const ACCEPTED_SCHEMA_EXTENSIONS = ".json,.yaml,.yml";
+
 export default function SwaggerDashboard(): ReactElement {
   const [schemaText, setSchemaText] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUploadClick = (): void => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (): void => {
+      if (typeof reader.result === "string") setSchemaText(reader.result);
+      event.target.value = "";
+    };
+    reader.readAsText(file);
+  };
 
   const [isMobile, setIsMobile] = useState<boolean>((): boolean => {
     if (typeof window === "undefined") return false;
@@ -39,10 +64,26 @@ export default function SwaggerDashboard(): ReactElement {
         {/* Editor - for example - feature of Mark */}
         <ResizablePanel defaultSize={50} minSize={25} className="h-full w-full">
           <div className="flex h-full flex-col bg-[#1b1b1b] font-mono text-[#f8f8f2]">
-            <div className="flex h-9 items-center border-b border-[#1a1a1a] bg-[#2d2d2d] px-4 select-none">
+            <div className="flex h-9 items-center justify-between border-b border-[#1a1a1a] bg-[#2d2d2d] px-4 select-none">
               <span className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
                 Swagger Editor // Live Code
               </span>
+              <div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept={ACCEPTED_SCHEMA_EXTENSIONS}
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                <button
+                  type="button"
+                  onClick={handleUploadClick}
+                  className="text-xs text-zinc-400 hover:text-zinc-200"
+                >
+                  Upload JSON/YAML file
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 bg-[#1b1b1b] p-2">
