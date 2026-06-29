@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ReactElement } from "react";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import "@/app/globals.css";
 import Header from "@/ui/header";
+import { getCurrentUser } from "@/lib/auth/session";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,14 +31,24 @@ export default async function RootLayout({
 }>): Promise<ReactElement> {
   const { locale } = await params;
 
+  // Enable static rendering and make the locale available to next-intl APIs.
+  setRequestLocale(locale);
+
+  // Load messages so client components (locale-aware Link, future translations)
+  // have an intl context via the provider.
+  const messages = await getMessages();
+  const user = await getCurrentUser();
+
   return (
     <html
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <Header isLoggedin={false} />
-        {children}
+        <NextIntlClientProvider messages={messages}>
+          <Header isLoggedin={Boolean(user)} />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

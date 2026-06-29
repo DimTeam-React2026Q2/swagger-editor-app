@@ -1,1 +1,20 @@
-{}
+{
+  "Auth": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "createAccount": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "needAccount": "Need an account?",
+    "haveAccount": "Already have an account?",
+    "pleaseWait": "Please wait...",
+    "errors": {
+      "invalidEmail": "Enter a valid email address",
+      "passwordMin": "Password must be at least 8 characters",
+      "passwordLetter": "Password must contain at least one letter",
+      "passwordDigit": "Password must contain at least one digit",
+      "passwordSpecial": "Password must contain at least one special character"
+    }
+  }
+}
