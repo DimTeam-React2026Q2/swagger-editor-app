@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import "@/app/globals.css";
 import Header from "@/ui/header";
+import Footer from "@/ui/footer";
 import { getCurrentUser } from "@/lib/auth/session";
 
 const geistSans = Geist({
@@ -48,6 +49,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <Header isLoggedin={Boolean(user)} />
           {children}
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>
