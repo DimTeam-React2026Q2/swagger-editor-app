@@ -16,5 +16,31 @@
       "passwordDigit": "Password must contain at least one digit",
       "passwordSpecial": "Password must contain at least one special character"
     }
+  },
+  "About": {
+    "title": "About Our Team",
+    "description": "Welcome to our Swagger Client application page. This project was built by dedicated students during the React course.",
+    "course": {
+      "title": "RS School React Course",
+      "description": "The Rolling Scopes School is a free, community-driven educational initiative. This application serves as a final project demonstrating skills in Next.js, TypeScript, and modern frontend architecture.",
+      "descriptionSecondary": "The RS School React course is a free, comprehensive online training program designed for students with solid foundational skills in Core JavaScript, TypeScript, HTML5, and CSS3. The curriculum covers everything from initial project setup and testing fundamentals to modern state management, data fetching, performance optimization, and Next.js. All study materials are fully open and publicly available on GitHub and YouTube.",
+      "linkLabel": "Learn more about RS School"
+    },
+    "team": {
+      "title": "Meet the Developers",
+      "marina": {
+        "name": "Maryna (Team Lead)",
+        "role": "Core Architecture, OpenAPI Parser & Documentation Viewer"
+      },
+      "mark": {
+        "name": "Mark",
+        "role": "Sticky App Header, Auth Pages & Swagger Editor Loader"
+      },
+      "dima": {
+        "name": "Dima",
+        "role": "Supabase Integration, REST Client & Requests History"
+      },
+      "githubLabel": "GitHub Profile"
+    }
   }
 }
