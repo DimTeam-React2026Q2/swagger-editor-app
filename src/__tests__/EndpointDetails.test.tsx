@@ -108,4 +108,21 @@ describe("EndpointDetails component documentation sections", (): void => {
     );
     expect(screen.getByText("delete")).toHaveClass("bg-rose-500");
   });
+  it("should render empty placeholder when parameters list is empty", (): void => {
+    const emptyParamsMock: EndpointData = {
+      ...mockEndpoint,
+      id: "get-/api/empty",
+      parameters: [],
+    };
+
+    render(
+      <Accordion type="single" collapsible defaultValue="get-/api/empty">
+        <EndpointDetails endpoint={emptyParamsMock} />
+      </Accordion>
+    );
+
+    expect(
+      screen.getByText("No parameters required for this operation.")
+    ).toBeInTheDocument();
+  });
 });
