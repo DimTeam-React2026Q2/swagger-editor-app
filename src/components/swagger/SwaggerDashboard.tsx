@@ -2,10 +2,11 @@
 
 import {
   useState,
-  useRef,
+  useMemo,
+  ReactElement,
   useEffect,
+  useRef,
   type ChangeEvent,
-  type ReactElement,
 } from "react";
 import {
   ResizablePanelGroup,
@@ -13,6 +14,7 @@ import {
   ResizableHandle,
 } from "@/components/ui/resizable";
 import { SwaggerViewer } from "./SwaggerViewer";
+import { detectSchemaFormat } from "@/lib/swagger/detect-schema-format";
 
 const ACCEPTED_SCHEMA_EXTENSIONS = ".json,.yaml,.yml";
 
@@ -35,6 +37,10 @@ export default function SwaggerDashboard(): ReactElement {
     };
     reader.readAsText(file);
   };
+  const schemaFormat = useMemo(
+    () => detectSchemaFormat(schemaText),
+    [schemaText]
+  );
 
   const [isMobile, setIsMobile] = useState<boolean>((): boolean => {
     if (typeof window === "undefined") return false;
@@ -68,6 +74,11 @@ export default function SwaggerDashboard(): ReactElement {
               <span className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
                 Swagger Editor // Live Code
               </span>
+              {schemaFormat !== "unknown" && (
+                <span className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
+                  {schemaFormat}
+                </span>
+              )}
               <div>
                 <input
                   ref={fileInputRef}
