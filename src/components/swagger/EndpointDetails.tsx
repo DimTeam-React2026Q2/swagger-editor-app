@@ -11,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import TryItOutForm from "./TryItOutForm";
 
 interface EndpointDetailsProps {
   endpoint: EndpointData;
@@ -171,10 +172,11 @@ export function EndpointDetails({
           </div>
         </div>
 
-        <div className="mt-4 border-t border-dashed border-zinc-200 pt-2">
-          <div className="rounded-md border border-dashed border-zinc-200 bg-zinc-50 p-4 text-center font-mono text-xs text-zinc-400">
-            {/*TryItOutForm slot*/}
-          </div>
+        <div className="mt-4 border-t border-dashed border-zinc-200 pt-4">
+          <h4 className="mb-3 text-xs font-bold tracking-wider text-zinc-800 uppercase">
+            Try it out
+          </h4>
+          <TryItOutForm endpoint={endpoint} />
         </div>
       </AccordionContent>
     </AccordionItem>
