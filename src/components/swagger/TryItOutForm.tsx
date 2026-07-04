@@ -4,7 +4,7 @@ import { useMemo, useState, type ReactElement } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import type { EndpointData } from "@/types/swagger";
+import type { EndpointData, TryItOutResponse } from "@/types/swagger";
 import {
   assembleRequest,
   paramPlaceholder,
@@ -29,6 +29,21 @@ function buildSchema(
 }
 
 const bodyMethods = new Set(["post", "put"]);
+
+function statusColor(status: number): string {
+  if (status === 0) return "bg-rose-100 text-rose-700";
+  if (status >= 200 && status < 300) return "bg-emerald-100 text-emerald-700";
+  if (status >= 300 && status < 400) return "bg-amber-100 text-amber-700";
+  return "bg-rose-100 text-rose-700";
+}
+
+function formatBody(body: string): string {
+  try {
+    return JSON.stringify(JSON.parse(body), null, 2);
+  } catch {
+    return body;
+  }
+}
 
 export default function TryItOutForm({
   endpoint,
@@ -58,10 +73,32 @@ export default function TryItOutForm({
 
   const showBody = bodyMethods.has(endpoint.method);
 
-  const onSubmit = handleSubmit((values: FieldValues): void => {
+  const [response, setResponse] = useState<TryItOutResponse | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const onSubmit = handleSubmit(async (values: FieldValues): Promise<void> => {
     const assembled = assembleRequest(endpoint, values, baseUrl, body);
-    // eslint-disable-next-line no-console
-    console.log("Assembled request:", assembled);
+    setIsLoading(true);
+    setResponse(null);
+    try {
+      const res = await fetch("/api/proxy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(assembled),
+      });
+      const data = (await res.json()) as TryItOutResponse;
+      setResponse(data);
+    } catch (error: unknown) {
+      setResponse({
+        statusCode: 0,
+        headers: {},
+        body: `Failed to reach proxy: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   });
 
   return (
@@ -128,9 +165,52 @@ export default function TryItOutForm({
         </div>
       )}
 
-      <Button type="submit" size="sm">
-        Execute
+      <Button type="submit" size="sm" disabled={isLoading}>
+        {isLoading ? "Executing..." : "Execute"}
       </Button>
+
+      {response && (
+        <div className="mt-4 space-y-3 border-t border-zinc-100 pt-4">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold tracking-wider text-zinc-500 uppercase">
+              Response
+            </span>
+            <span
+              className={`rounded px-2 py-0.5 font-mono text-xs font-bold ${statusColor(
+                response.statusCode
+              )}`}
+            >
+              {response.statusCode === 0 ? "ERROR" : response.statusCode}
+            </span>
+          </div>
+
+          {Object.keys(response.headers).length > 0 && (
+            <div>
+              <p className="mb-1 text-[10px] font-semibold tracking-wider text-zinc-400 uppercase">
+                Headers
+              </p>
+              <div className="max-h-32 overflow-auto rounded-md border border-zinc-100 bg-zinc-50 p-2 font-mono text-[11px] text-zinc-600">
+                {Object.entries(response.headers).map(
+                  ([key, value]): ReactElement => (
+                    <div key={key}>
+                      <span className="text-zinc-800">{key}</span>: {value}
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          )}
+
+          <div>
+            <p className="mb-1 text-[10px] font-semibold tracking-wider text-zinc-400 uppercase">
+              Body
+            </p>
+            <pre className="custom-scrollbar-light max-h-64 overflow-auto rounded-md border border-zinc-100 bg-zinc-50 p-3 font-mono text-[11px] whitespace-pre-wrap text-zinc-700">
+              {formatBody(response.body)}
+            </pre>
+          </div>
+        </div>
+      )}
     </form>
   );
 }
