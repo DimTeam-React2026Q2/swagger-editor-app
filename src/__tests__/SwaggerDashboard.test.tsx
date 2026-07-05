@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, act, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  act,
+  fireEvent,
+  waitFor,
+} from "@testing-library/react";
 import React, { ReactElement } from "react";
 
 vi.mock(
@@ -166,5 +172,166 @@ describe("SwaggerDashboard responsive layout", (): void => {
     });
 
     expect(textarea).toHaveValue("openapi: 3.0.0");
+  });
+});
+
+describe("SwaggerDashboard schema input", (): void => {
+  const mockMatchMedia = (): void => {
+    window.matchMedia = vi.fn().mockImplementation(
+      (query: string): MediaQueryList => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn() as unknown as (event: Event) => boolean,
+      })
+    );
+  };
+
+  beforeEach((): void => {
+    vi.resetModules();
+    vi.clearAllMocks();
+    mockMatchMedia();
+  });
+
+  it("should accept pasted JSON schema text in the editor", async (): Promise<void> => {
+    const jsonSchema = JSON.stringify({ openapi: "3.0.0", paths: {} });
+
+    const { default: SwaggerDashboardComponent } =
+      await import("@/components/swagger/SwaggerDashboard");
+    render(<SwaggerDashboardComponent />);
+
+    const textarea = screen.getByRole("textbox");
+
+    act((): void => {
+      fireEvent.change(textarea, { target: { value: jsonSchema } });
+    });
+
+    expect(textarea).toHaveValue(jsonSchema);
+  });
+
+  it("should accept pasted YAML schema text in the editor", async (): Promise<void> => {
+    const yamlSchema = "openapi: 3.0.0\npaths:\n  /pets:\n    get: {}";
+
+    const { default: SwaggerDashboardComponent } =
+      await import("@/components/swagger/SwaggerDashboard");
+    render(<SwaggerDashboardComponent />);
+
+    const textarea = screen.getByRole("textbox");
+
+    act((): void => {
+      fireEvent.change(textarea, { target: { value: yamlSchema } });
+    });
+
+    expect(textarea).toHaveValue(yamlSchema);
+  });
+
+  it("should display json format label when JSON schema is pasted", async (): Promise<void> => {
+    const jsonSchema = JSON.stringify({ openapi: "3.0.0", paths: {} });
+
+    const { default: SwaggerDashboardComponent } =
+      await import("@/components/swagger/SwaggerDashboard");
+    render(<SwaggerDashboardComponent />);
+
+    act((): void => {
+      fireEvent.change(screen.getByRole("textbox"), {
+        target: { value: jsonSchema },
+      });
+    });
+
+    expect(screen.getByText("json")).toBeInTheDocument();
+  });
+
+  it("should display yaml format label when YAML schema is pasted", async (): Promise<void> => {
+    const yamlSchema = "openapi: 3.0.0\npaths:\n  /pets:\n    get: {}";
+
+    const { default: SwaggerDashboardComponent } =
+      await import("@/components/swagger/SwaggerDashboard");
+    render(<SwaggerDashboardComponent />);
+
+    act((): void => {
+      fireEvent.change(screen.getByRole("textbox"), {
+        target: { value: yamlSchema },
+      });
+    });
+
+    expect(screen.getByText("yaml")).toBeInTheDocument();
+  });
+
+  it("should load uploaded JSON file content into the editor", async (): Promise<void> => {
+    const fileContent = JSON.stringify({ openapi: "3.0.0", paths: {} });
+
+    class MockFileReader {
+      result: string | ArrayBuffer | null = null;
+      onload: (() => void) | null = null;
+
+      readAsText(): void {
+        this.result = fileContent;
+        this.onload?.();
+      }
+    }
+
+    vi.stubGlobal("FileReader", MockFileReader);
+
+    const { default: SwaggerDashboardComponent } =
+      await import("@/components/swagger/SwaggerDashboard");
+    render(<SwaggerDashboardComponent />);
+
+    const file = new File([fileContent], "schema.json", {
+      type: "application/json",
+    });
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+
+    act((): void => {
+      fireEvent.change(fileInput, { target: { files: [file] } });
+    });
+
+    await waitFor((): void => {
+      expect(screen.getByRole("textbox")).toHaveValue(fileContent);
+    });
+
+    vi.unstubAllGlobals();
+  });
+
+  it("should load uploaded YAML file content into the editor", async (): Promise<void> => {
+    const fileContent = "openapi: 3.0.0\npaths:\n  /pets:\n    get: {}";
+
+    class MockFileReader {
+      result: string | ArrayBuffer | null = null;
+      onload: (() => void) | null = null;
+
+      readAsText(): void {
+        this.result = fileContent;
+        this.onload?.();
+      }
+    }
+
+    vi.stubGlobal("FileReader", MockFileReader);
+
+    const { default: SwaggerDashboardComponent } =
+      await import("@/components/swagger/SwaggerDashboard");
+    render(<SwaggerDashboardComponent />);
+
+    const file = new File([fileContent], "schema.yaml", {
+      type: "application/x-yaml",
+    });
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+
+    act((): void => {
+      fireEvent.change(fileInput, { target: { files: [file] } });
+    });
+
+    await waitFor((): void => {
+      expect(screen.getByRole("textbox")).toHaveValue(fileContent);
+    });
+
+    vi.unstubAllGlobals();
   });
 });
