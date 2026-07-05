@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactElement } from "react";
-import { useForm, type Resolver } from "react-hook-form";
+import { useForm, useWatch, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { EndpointData, TryItOutResponse } from "@/types/swagger";
@@ -10,6 +10,7 @@ import {
   paramPlaceholder,
   type FieldValues,
 } from "@/lib/swagger/assemble-request";
+import { buildCurl } from "@/lib/swagger/build-curl";
 import { Button } from "@/components/ui/button";
 
 interface TryItOutFormProps {
@@ -65,6 +66,7 @@ export default function TryItOutForm({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<FieldValues>({
     resolver: zodResolver(schema) as unknown as Resolver<FieldValues>,
@@ -75,6 +77,22 @@ export default function TryItOutForm({
 
   const [response, setResponse] = useState<TryItOutResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const watched = useWatch({ control }) as FieldValues;
+  const curlCommand = buildCurl(
+    assembleRequest(endpoint, watched, baseUrl, body)
+  );
+
+  const handleCopyCurl = async (): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(curlCommand);
+      setCopied(true);
+      setTimeout((): void => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   const onSubmit = handleSubmit(async (values: FieldValues): Promise<void> => {
     const assembled = assembleRequest(endpoint, values, baseUrl, body);
@@ -168,6 +186,24 @@ export default function TryItOutForm({
       <Button type="submit" size="sm" disabled={isLoading}>
         {isLoading ? "Executing..." : "Execute"}
       </Button>
+
+      <div className="mt-2">
+        <div className="mb-1 flex items-center justify-between">
+          <span className="text-[11px] font-semibold tracking-wider text-zinc-500 uppercase">
+            cURL
+          </span>
+          <button
+            type="button"
+            onClick={handleCopyCurl}
+            className="rounded border border-zinc-200 px-2 py-0.5 text-[10px] font-semibold text-zinc-600 hover:bg-zinc-50"
+          >
+            {copied ? "Copied!" : "Copy"}
+          </button>
+        </div>
+        <pre className="custom-scrollbar-light max-h-40 overflow-auto rounded-md border border-zinc-100 bg-zinc-900 p-3 font-mono text-[11px] whitespace-pre-wrap text-zinc-100">
+          {curlCommand}
+        </pre>
+      </div>
 
       {response && (
         <div className="mt-4 space-y-3 border-t border-zinc-100 pt-4">
