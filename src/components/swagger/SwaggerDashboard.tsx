@@ -19,6 +19,7 @@ import {
   type SchemaFormat,
 } from "@/lib/swagger/detect-schema-format";
 import { convertSchema } from "@/lib/swagger/convert-schema";
+import { validateSchema } from "@/lib/swagger/validate-schema";
 
 const ACCEPTED_SCHEMA_EXTENSIONS = ".json,.yaml,.yml";
 
@@ -47,6 +48,8 @@ export default function SwaggerDashboard(): ReactElement {
   );
 
   const [conversionError, setConversionError] = useState<string | null>(null);
+
+  const validation = useMemo(() => validateSchema(schemaText), [schemaText]);
 
   const handleConvert = (target: SchemaFormat): void => {
     if (target === schemaFormat || !schemaText.trim()) return;
@@ -148,6 +151,26 @@ export default function SwaggerDashboard(): ReactElement {
                 }}
                 spellCheck={false}
               />
+            </div>
+
+            <div className="flex h-7 items-center gap-2 border-t border-[#1a1a1a] bg-[#2d2d2d] px-4 select-none">
+              {validation.status === "empty" && (
+                <span className="text-[11px] text-zinc-500">
+                  Waiting for schema…
+                </span>
+              )}
+              {validation.status === "valid" && (
+                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  Valid schema
+                </span>
+              )}
+              {validation.status === "invalid" && (
+                <span className="flex items-center gap-1.5 truncate text-[11px] font-semibold text-rose-400">
+                  <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-rose-400" />
+                  <span className="truncate">{validation.error}</span>
+                </span>
+              )}
             </div>
           </div>
         </ResizablePanel>
