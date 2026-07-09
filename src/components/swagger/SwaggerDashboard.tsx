@@ -20,11 +20,20 @@ import {
 } from "@/lib/swagger/detect-schema-format";
 import { convertSchema } from "@/lib/swagger/convert-schema";
 import { validateSchema } from "@/lib/swagger/validate-schema";
+import { saveSchema } from "@/lib/swagger/schema-storage";
 
 const ACCEPTED_SCHEMA_EXTENSIONS = ".json,.yaml,.yml";
 
-export default function SwaggerDashboard(): ReactElement {
-  const [schemaText, setSchemaText] = useState<string>("");
+interface SwaggerDashboardProps {
+  initialSchema?: string;
+  isAuthenticated?: boolean;
+}
+
+export default function SwaggerDashboard({
+  initialSchema = "",
+  isAuthenticated = false,
+}: SwaggerDashboardProps): ReactElement {
+  const [schemaText, setSchemaText] = useState<string>(initialSchema);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUploadClick = (): void => {
@@ -50,6 +59,21 @@ export default function SwaggerDashboard(): ReactElement {
   const [conversionError, setConversionError] = useState<string | null>(null);
 
   const validation = useMemo(() => validateSchema(schemaText), [schemaText]);
+
+  const [saveState, setSaveState] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+
+  const handleSave = async (): Promise<void> => {
+    setSaveState("saving");
+    const result = await saveSchema(schemaText, schemaFormat);
+    if (result.ok) {
+      setSaveState("saved");
+      setTimeout((): void => setSaveState("idle"), 1500);
+    } else {
+      setSaveState("error");
+    }
+  };
 
   const handleConvert = (target: SchemaFormat): void => {
     if (target === schemaFormat || !schemaText.trim()) return;
@@ -95,6 +119,24 @@ export default function SwaggerDashboard(): ReactElement {
                 Swagger Editor // Live Code
               </span>
               <div className="flex items-center gap-3">
+                {isAuthenticated && schemaText.trim() && (
+                  <button
+                    type="button"
+                    onClick={handleSave}
+                    disabled={
+                      saveState === "saving" || validation.status !== "valid"
+                    }
+                    className="rounded bg-emerald-600 px-2 py-0.5 text-[11px] font-semibold text-white transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    {saveState === "saving"
+                      ? "Saving…"
+                      : saveState === "saved"
+                        ? "Saved!"
+                        : saveState === "error"
+                          ? "Error"
+                          : "Save"}
+                  </button>
+                )}
                 {schemaText.trim() && (
                   <div className="flex items-center overflow-hidden rounded border border-zinc-700">
                     {(["json", "yaml"] as const).map(
