@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import type { TryItOutResponse } from "@/types/swagger";
+import { recordRequest } from "@/lib/history/request-history";
+import { byteLength, headersSize, elapsedMs } from "@/lib/history/analytics";
 
 /**
  * Server-side request proxy for the Try-It-Out REST client.
@@ -10,7 +12,9 @@ import type { TryItOutResponse } from "@/types/swagger";
  * fetch, then return the result in the TryItOutResponse shape.
  *
  * Error HTTP statuses (4xx/5xx) are returned as data, never thrown — the UI
- * must be able to display them (per task spec).
+ * must be able to display them (per task spec). Each executed request is also
+ * recorded server-side for History & Analytics (best-effort, authenticated
+ * users only).
  */
 
 type ProxyRequest = {
@@ -18,6 +22,7 @@ type ProxyRequest = {
   url: string;
   headers?: Record<string, string>;
   body?: string;
+  endpoint?: string;
 };
 
 const ALLOWED_METHODS = new Set(["GET", "POST", "PUT", "DELETE", "PATCH"]);
@@ -44,7 +49,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   const method = (payload.method ?? "GET").toUpperCase();
-  const { url, headers, body } = payload;
+  const { url, headers, body, endpoint } = payload;
 
   if (!url || typeof url !== "string") {
     return NextResponse.json(
@@ -80,6 +85,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     REQUEST_TIMEOUT_MS
   );
 
+  const requestSize = headersSize(headers ?? {}) + byteLength(body);
+  const startedAt = Date.now();
+
   try {
     const hasBody = method !== "GET" && method !== "DELETE" && Boolean(body);
 
@@ -97,6 +105,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
 
     const responseBody = await upstream.text();
+    const durationMs = elapsedMs(startedAt, Date.now());
 
     const result: TryItOutResponse = {
       statusCode: upstream.status,
@@ -104,12 +113,36 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       body: responseBody,
     };
 
+    await recordRequest({
+      method,
+      url,
+      endpoint: endpoint ?? null,
+      statusCode: upstream.status,
+      durationMs,
+      requestSize,
+      responseSize: headersSize(responseHeaders) + byteLength(responseBody),
+      error: upstream.ok ? null : `HTTP ${upstream.status}`,
+    });
+
     return NextResponse.json(result, { status: 200 });
   } catch (error: unknown) {
+    const durationMs = elapsedMs(startedAt, Date.now());
     const isAbort = error instanceof Error && error.name === "AbortError";
     const message = isAbort
       ? `Request timed out after ${REQUEST_TIMEOUT_MS / 1000}s.`
       : `Network error: ${error instanceof Error ? error.message : "unknown"}`;
+
+    await recordRequest({
+      method,
+      url,
+      endpoint: endpoint ?? null,
+      statusCode: 0,
+      durationMs,
+      requestSize,
+      responseSize: 0,
+      error: message,
+    });
+
     return NextResponse.json(errorResponse(0, message), { status: 200 });
   } finally {
     clearTimeout(timeout);

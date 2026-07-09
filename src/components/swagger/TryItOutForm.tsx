@@ -96,7 +96,7 @@ export default function TryItOutForm({
       const res = await fetch("/api/proxy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(assembled),
+        body: JSON.stringify({ ...assembled, endpoint: endpoint.path }),
       });
       const data = (await res.json()) as TryItOutResponse;
       setResponse(data);
