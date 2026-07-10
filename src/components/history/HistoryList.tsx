@@ -11,7 +11,6 @@ interface HistoryListProps {
   entries: RequestHistoryEntry[];
 }
 
-/** Renders the request history table, or an informational empty state. */
 export default function HistoryList({
   entries,
 }: HistoryListProps): ReactElement {

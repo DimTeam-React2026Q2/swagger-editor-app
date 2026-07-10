@@ -7,10 +7,6 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 const LOCALES = ["en", "ru"] as const;
 type Locale = (typeof LOCALES)[number];
 
-/**
- * Switches the active locale while staying on the current route.
- * next-intl's router rewrites the path with the new locale prefix.
- */
 export default function LanguageToggle(): ReactElement {
   const activeLocale = useLocale();
   const pathname = usePathname();

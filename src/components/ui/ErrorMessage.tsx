@@ -6,10 +6,6 @@ interface ErrorMessageProps {
   className?: string;
 }
 
-/**
- * Consistent, user-friendly error banner used across the app (auth, editor,
- * REST client). Icon + readable text, accessible via role="alert".
- */
 export default function ErrorMessage({
   message,
   className = "",
