@@ -1,5 +1,5 @@
 -- ============================================================================
--- DIMA-16: request history & analytics — run this in Supabase (SQL Editor) once.
+-- request history & analytics — run this in Supabase (SQL Editor) once.
 -- ============================================================================
 
 create table if not exists public.request_history (
