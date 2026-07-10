@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import {
   signInSchema,
   signUpSchema,
@@ -102,11 +103,7 @@ export default function AuthForm({
           )}
         </label>
 
-        {serverError && (
-          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-            {serverError}
-          </p>
-        )}
+        {serverError && <ErrorMessage message={serverError} />}
 
         <Button type="submit" disabled={isPending} className="mt-2">
           {isPending ? "Please wait..." : copy.submit}
