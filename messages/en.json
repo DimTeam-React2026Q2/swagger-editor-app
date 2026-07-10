@@ -42,5 +42,12 @@
       },
       "githubLabel": "GitHub Profile"
     }
+  },
+  "Header": {
+    "about": "About",
+    "history": "History",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out"
   }
 }

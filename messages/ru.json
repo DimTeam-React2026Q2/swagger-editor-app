@@ -42,5 +42,12 @@
       },
       "githubLabel": "Профиль на GitHub"
     }
+  },
+  "Header": {
+    "about": "О проекте",
+    "history": "История",
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "signOut": "Выйти"
   }
 }

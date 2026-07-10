@@ -43,6 +43,33 @@ vi.mock(
   })
 );
 
+// DIMA: Header now uses next-intl translations + a language toggle (Feature 7).
+// Map translation keys back to the English labels the assertions expect.
+const HEADER_LABELS: Record<string, string> = {
+  about: "About",
+  history: "History",
+  signIn: "Sign in",
+  signUp: "Sign up",
+  signOut: "Sign out",
+};
+
+vi.mock(
+  "next-intl",
+  (): Record<string, unknown> => ({
+    useTranslations:
+      () =>
+      (key: string): string =>
+        HEADER_LABELS[key] ?? key,
+  })
+);
+
+vi.mock(
+  "@/components/i18n/LanguageToggle",
+  (): Record<string, unknown> => ({
+    default: (): ReactElement => <div data-testid="language-toggle" />,
+  })
+);
+
 const setScrollY = (value: number): void => {
   Object.defineProperty(window, "scrollY", {
     value,

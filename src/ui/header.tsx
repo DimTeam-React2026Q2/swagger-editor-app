@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import SignOutButton from "@/components/auth/SignOutButton";
 import { Link } from "@/i18n/navigation";
+import LanguageToggle from "@/components/i18n/LanguageToggle";
 import { cn } from "@/lib/utils";
 
 type HeaderProps = {
@@ -12,6 +14,7 @@ type HeaderProps = {
 };
 
 export default function Header({ isLoggedin }: HeaderProps): React.JSX.Element {
+  const t = useTranslations("Header");
   const [isSticky, setIsSticky] = useState(false);
 
   useEffect((): (() => void) => {
@@ -45,23 +48,25 @@ export default function Header({ isLoggedin }: HeaderProps): React.JSX.Element {
         Swagger
       </Link>
       <nav className="flex items-center justify-end gap-2">
+        {/* DIMA: i18n language toggle (Feature 7) */}
+        <LanguageToggle />
         <Button variant="ghost" asChild>
-          <Link href="/about">About</Link>
+          <Link href="/about">{t("about")}</Link>
         </Button>
         {isLoggedin ? (
           <>
             <Button variant="ghost" asChild>
-              <Link href="/history">History</Link>
+              <Link href="/history">{t("history")}</Link>
             </Button>
             <SignOutButton />
           </>
         ) : (
           <>
             <Button variant="ghost" asChild>
-              <Link href="/sign-in">Sign in</Link>
+              <Link href="/sign-in">{t("signIn")}</Link>
             </Button>
             <Button variant="ghost" asChild>
-              <Link href="/sign-up">Sign up</Link>
+              <Link href="/sign-up">{t("signUp")}</Link>
             </Button>
           </>
         )}
