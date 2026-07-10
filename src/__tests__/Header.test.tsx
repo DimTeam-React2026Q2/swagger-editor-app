@@ -43,8 +43,6 @@ vi.mock(
   })
 );
 
-// DIMA: Header now uses next-intl translations + a language toggle (Feature 7).
-// Map translation keys back to the English labels the assertions expect.
 const HEADER_LABELS: Record<string, string> = {
   about: "About",
   history: "History",

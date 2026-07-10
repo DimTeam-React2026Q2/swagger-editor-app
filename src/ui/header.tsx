@@ -48,7 +48,6 @@ export default function Header({ isLoggedin }: HeaderProps): React.JSX.Element {
         Swagger
       </Link>
       <nav className="flex items-center justify-end gap-2">
-        {/* DIMA: i18n language toggle (Feature 7) */}
         <LanguageToggle />
         <Button variant="ghost" asChild>
           <Link href="/about">{t("about")}</Link>
