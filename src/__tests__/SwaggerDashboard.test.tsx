@@ -1,11 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import {
-  render,
-  screen,
-  act,
-  fireEvent,
-  waitFor,
-} from "@testing-library/react";
+import { screen, act, fireEvent, waitFor } from "@testing-library/react";
+import { renderWithIntl } from "@/test/render-with-intl";
 import React, { ReactElement } from "react";
 
 vi.mock(
@@ -71,7 +66,7 @@ describe("SwaggerDashboard responsive layout", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    render(<SwaggerDashboardComponent />);
+    renderWithIntl(<SwaggerDashboardComponent />);
 
     expect(
       screen.getByText("Swagger UI // API Documentation")
@@ -107,7 +102,7 @@ describe("SwaggerDashboard responsive layout", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    render(<SwaggerDashboardComponent />);
+    renderWithIntl(<SwaggerDashboardComponent />);
 
     act((): void => {
       changeCallback({
@@ -141,7 +136,7 @@ describe("SwaggerDashboard responsive layout", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    const { unmount } = render(<SwaggerDashboardComponent />);
+    const { unmount } = renderWithIntl(<SwaggerDashboardComponent />);
     unmount();
 
     expect(removeSpy).toHaveBeenCalledWith("change", expect.any(Function));
@@ -163,7 +158,7 @@ describe("SwaggerDashboard responsive layout", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    render(<SwaggerDashboardComponent />);
+    renderWithIntl(<SwaggerDashboardComponent />);
 
     const textarea = screen.getByRole("textbox");
 
@@ -202,7 +197,7 @@ describe("SwaggerDashboard schema input", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    render(<SwaggerDashboardComponent />);
+    renderWithIntl(<SwaggerDashboardComponent />);
 
     const textarea = screen.getByRole("textbox");
 
@@ -218,7 +213,7 @@ describe("SwaggerDashboard schema input", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    render(<SwaggerDashboardComponent />);
+    renderWithIntl(<SwaggerDashboardComponent />);
 
     const textarea = screen.getByRole("textbox");
 
@@ -234,7 +229,7 @@ describe("SwaggerDashboard schema input", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    render(<SwaggerDashboardComponent />);
+    renderWithIntl(<SwaggerDashboardComponent />);
 
     act((): void => {
       fireEvent.change(screen.getByRole("textbox"), {
@@ -250,7 +245,7 @@ describe("SwaggerDashboard schema input", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    render(<SwaggerDashboardComponent />);
+    renderWithIntl(<SwaggerDashboardComponent />);
 
     act((): void => {
       fireEvent.change(screen.getByRole("textbox"), {
@@ -278,7 +273,7 @@ describe("SwaggerDashboard schema input", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    render(<SwaggerDashboardComponent />);
+    renderWithIntl(<SwaggerDashboardComponent />);
 
     const file = new File([fileContent], "schema.json", {
       type: "application/json",
@@ -315,7 +310,7 @@ describe("SwaggerDashboard schema input", (): void => {
 
     const { default: SwaggerDashboardComponent } =
       await import("@/components/swagger/SwaggerDashboard");
-    render(<SwaggerDashboardComponent />);
+    renderWithIntl(<SwaggerDashboardComponent />);
 
     const file = new File([fileContent], "schema.yaml", {
       type: "application/x-yaml",

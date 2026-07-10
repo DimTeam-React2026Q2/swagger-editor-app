@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactElement } from "react";
+import { useTranslations } from "next-intl";
 import {
   EndpointData,
   EndpointParameter,
@@ -50,6 +51,7 @@ const getBadgeStyle = (method: string): string => {
 export function EndpointDetails({
   endpoint,
 }: EndpointDetailsProps): ReactElement {
+  const t = useTranslations("Viewer");
   return (
     <AccordionItem
       value={endpoint.id}
@@ -77,20 +79,20 @@ export function EndpointDetails({
         <div className="custom-scrollbar-light max-h-[70vh] space-y-6 overflow-y-auto p-4">
           <div>
             <h4 className="mb-2 text-xs font-bold tracking-wider text-zinc-800 uppercase">
-              Parameters
+              {t("parameters")}
             </h4>
             {endpoint.parameters.length === 0 ? (
               <p className="px-1 text-xs text-zinc-400 italic">
-                No parameters required for this operation.
+                {t("noParameters")}
               </p>
             ) : (
               <div className="overflow-hidden rounded-md border border-zinc-100 text-xs">
                 <table className="w-full border-collapse text-left">
                   <thead>
                     <tr className="border-b border-zinc-100 bg-zinc-50 font-semibold text-zinc-500">
-                      <th className="w-1/3 p-2">Name</th>
-                      <th className="w-1/4 p-2">Type</th>
-                      <th className="p-2">Location</th>
+                      <th className="w-1/3 p-2">{t("name")}</th>
+                      <th className="w-1/4 p-2">{t("type")}</th>
+                      <th className="p-2">{t("location")}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-50 font-mono">
@@ -101,7 +103,7 @@ export function EndpointDetails({
                             {param.name}
                             {param.required && (
                               <span className="ml-1 font-sans text-rose-500">
-                                * required
+                                {t("required")}
                               </span>
                             )}
                           </td>
@@ -125,7 +127,7 @@ export function EndpointDetails({
           {endpoint.requestBodySchema && (
             <div>
               <h4 className="mb-2 text-xs font-bold tracking-wider text-zinc-800 uppercase">
-                Request Body
+                {t("requestBody")}
               </h4>
               <div className="max-h-48 overflow-x-auto rounded-md border border-zinc-100 bg-zinc-50 p-3 font-mono text-xs">
                 <pre className="text-zinc-600">
@@ -137,7 +139,7 @@ export function EndpointDetails({
 
           <div>
             <h4 className="mb-2 text-xs font-bold tracking-wider text-zinc-800 uppercase">
-              Responses
+              {t("responses")}
             </h4>
             <div className="space-y-2 text-xs">
               {Object.entries(endpoint.responses).map(
@@ -175,7 +177,7 @@ export function EndpointDetails({
 
           <div className="mt-4 border-t border-dashed border-zinc-200 pt-4">
             <h4 className="mb-3 text-xs font-bold tracking-wider text-zinc-800 uppercase">
-              Try it out
+              {t("tryItOut")}
             </h4>
             <div className="mt-6 w-full border-t border-dashed border-zinc-200 pt-6 text-left font-sans">
               <TryItOutForm endpoint={endpoint} />

@@ -5,6 +5,7 @@ import { useForm, useWatch, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { EndpointData, TryItOutResponse } from "@/types/swagger";
 import {
   assembleRequest,
@@ -52,6 +53,7 @@ function formatBody(body: string): string {
 export default function TryItOutForm({
   endpoint,
 }: TryItOutFormProps): ReactElement {
+  const t = useTranslations("TryItOut");
   const schema = useMemo(
     (): z.ZodObject<Record<string, z.ZodTypeAny>> => buildSchema(endpoint),
     [endpoint]
@@ -132,7 +134,7 @@ export default function TryItOutForm({
     >
       <div className="flex flex-col gap-1">
         <label className="text-[11px] font-semibold tracking-wider text-zinc-500 uppercase">
-          Base URL
+          {t("baseUrl")}
         </label>
         <input
           type="url"
@@ -176,7 +178,7 @@ export default function TryItOutForm({
       {showBody && (
         <div className="flex flex-col gap-1">
           <label className="text-[11px] font-semibold tracking-wider text-zinc-500 uppercase">
-            Request Body (JSON)
+            {t("requestBodyJson")}
           </label>
           <textarea
             value={body}
@@ -192,10 +194,10 @@ export default function TryItOutForm({
         {isLoading ? (
           <span className="inline-flex items-center gap-1.5">
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            Executing...
+            {t("executing")}
           </span>
         ) : (
-          "Execute"
+          t("execute")
         )}
       </Button>
 
@@ -204,7 +206,7 @@ export default function TryItOutForm({
           <span className="text-[11px] font-semibold tracking-wider text-zinc-500 uppercase">
             cURL
           </span>
-          <CopyButton value={curlCommand} label="Copy" />
+          <CopyButton value={curlCommand} label={t("copy")} />
         </div>
         <pre className="custom-scrollbar-light max-h-40 overflow-auto rounded-md border border-zinc-800 bg-zinc-900 p-3 font-mono text-[11px] whitespace-pre-wrap text-zinc-100 select-text">
           {curlCommand}
@@ -218,7 +220,7 @@ export default function TryItOutForm({
         >
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-semibold tracking-wider text-zinc-500 uppercase">
-              Response
+              {t("response")}
             </span>
             <span
               className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 font-mono text-xs font-bold ${statusBadge(
@@ -234,13 +236,13 @@ export default function TryItOutForm({
             <div>
               <div className="mb-1 flex items-center justify-between">
                 <p className="text-[10px] font-semibold tracking-wider text-zinc-400 uppercase">
-                  Headers
+                  {t("headers")}
                 </p>
                 <CopyButton
                   value={Object.entries(response.headers)
                     .map(([k, v]): string => `${k}: ${v}`)
                     .join("\n")}
-                  label="Copy"
+                  label={t("copy")}
                 />
               </div>
               <div className="custom-scrollbar-light max-h-32 overflow-auto rounded-md border border-zinc-100 bg-zinc-50 p-2 font-mono text-[11px] text-zinc-600 select-text">
@@ -258,9 +260,9 @@ export default function TryItOutForm({
           <div>
             <div className="mb-1 flex items-center justify-between">
               <p className="text-[10px] font-semibold tracking-wider text-zinc-400 uppercase">
-                Body
+                {t("body")}
               </p>
-              <CopyButton value={responseBody} label="Copy" />
+              <CopyButton value={responseBody} label={t("copy")} />
             </div>
             <pre className="custom-scrollbar-light max-h-64 overflow-auto rounded-md border border-zinc-100 bg-zinc-50 p-3 font-mono text-[11px] whitespace-pre-wrap text-zinc-700 select-text">
               {responseBody}
