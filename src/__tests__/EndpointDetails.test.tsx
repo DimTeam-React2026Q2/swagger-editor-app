@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { EndpointDetails } from "@/components/swagger/EndpointDetails";
 import { EndpointData } from "@/types/swagger";
 import { Accordion } from "@/components/ui/accordion";
@@ -39,9 +39,10 @@ describe("EndpointDetails component documentation sections", (): void => {
     );
 
     expect(screen.getByText("Parameters")).toBeInTheDocument();
-    expect(screen.getByText("userId")).toBeInTheDocument();
-    expect(screen.getByText("* required")).toBeInTheDocument();
-    expect(screen.getByText("query")).toBeInTheDocument();
+    const paramsTable = screen.getByRole("table");
+    expect(within(paramsTable).getByText("userId")).toBeInTheDocument();
+    expect(within(paramsTable).getByText("* required")).toBeInTheDocument();
+    expect(within(paramsTable).getByText("query")).toBeInTheDocument();
   });
 
   it("should render request body section if schema is provided", (): void => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactElement } from "react";
+import { useMemo, useState, useRef, useEffect, type ReactElement } from "react";
 import { useForm, useWatch, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -80,6 +80,17 @@ export default function TryItOutForm({
 
   const [response, setResponse] = useState<TryItOutResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const responseRef = useRef<HTMLDivElement>(null);
+
+  useEffect((): void => {
+    if (response && responseRef.current) {
+      responseRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [response]);
 
   const watched = useWatch({ control }) as FieldValues;
   const curlCommand = buildCurl(
@@ -201,7 +212,10 @@ export default function TryItOutForm({
       </div>
 
       {response && (
-        <div className="mt-4 space-y-3 border-t border-zinc-100 pt-4">
+        <div
+          ref={responseRef}
+          className="animate-fade-in mt-4 space-y-3 rounded-md border border-zinc-200 bg-white p-3 pt-4 shadow-sm"
+        >
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-semibold tracking-wider text-zinc-500 uppercase">
               Response
