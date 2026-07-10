@@ -2,6 +2,7 @@
 
 import { useState, type ReactElement } from "react";
 import { Check, Copy } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface CopyButtonProps {
   value: string;
@@ -12,6 +13,7 @@ export default function CopyButton({
   value,
   label = "Copy",
 }: CopyButtonProps): ReactElement {
+  const t = useTranslations("TryItOut");
   const [copied, setCopied] = useState<boolean>(false);
 
   const handleCopy = async (): Promise<void> => {
@@ -34,7 +36,7 @@ export default function CopyButton({
       {copied ? (
         <>
           <Check className="h-3 w-3 text-emerald-600" />
-          Copied!
+          {t("copied")}
         </>
       ) : (
         <>

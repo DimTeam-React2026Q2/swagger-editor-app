@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
+import { renderWithIntl } from "@/test/render-with-intl";
 import { EndpointDetails } from "@/components/swagger/EndpointDetails";
 import { EndpointData } from "@/types/swagger";
 import { Accordion } from "@/components/ui/accordion";
@@ -32,20 +33,21 @@ describe("EndpointDetails component documentation sections", (): void => {
   };
 
   it("should correctly render parameters table with required marks", (): void => {
-    render(
+    renderWithIntl(
       <Accordion type="single" collapsible defaultValue="get-/api/test">
         <EndpointDetails endpoint={mockEndpoint} />
       </Accordion>
     );
 
     expect(screen.getByText("Parameters")).toBeInTheDocument();
-    expect(screen.getByText("userId")).toBeInTheDocument();
-    expect(screen.getByText("* required")).toBeInTheDocument();
-    expect(screen.getByText("query")).toBeInTheDocument();
+    const paramsTable = screen.getByRole("table");
+    expect(within(paramsTable).getByText("userId")).toBeInTheDocument();
+    expect(within(paramsTable).getByText("* required")).toBeInTheDocument();
+    expect(within(paramsTable).getByText("query")).toBeInTheDocument();
   });
 
   it("should render request body section if schema is provided", (): void => {
-    render(
+    renderWithIntl(
       <Accordion type="single" collapsible defaultValue="get-/api/test">
         <EndpointDetails endpoint={mockEndpoint} />
       </Accordion>
@@ -55,7 +57,7 @@ describe("EndpointDetails component documentation sections", (): void => {
   });
 
   it("should correctly render responses status codes and descriptions", (): void => {
-    render(
+    renderWithIntl(
       <Accordion type="single" collapsible defaultValue="get-/api/test">
         <EndpointDetails endpoint={mockEndpoint} />
       </Accordion>
@@ -72,7 +74,7 @@ describe("EndpointDetails component documentation sections", (): void => {
       id: "post-/api/test",
       method: "post",
     };
-    render(
+    renderWithIntl(
       <Accordion type="single" collapsible defaultValue="post-/api/test">
         <EndpointDetails endpoint={postMock} />
       </Accordion>
@@ -88,7 +90,7 @@ describe("EndpointDetails component documentation sections", (): void => {
       id: "put-/api/test",
       method: "put",
     };
-    const { unmount } = render(
+    const { unmount } = renderWithIntl(
       <Accordion type="single" collapsible defaultValue="put-/api/test">
         <EndpointDetails endpoint={putMock} />
       </Accordion>
@@ -101,7 +103,7 @@ describe("EndpointDetails component documentation sections", (): void => {
       id: "delete-/api/test",
       method: "delete",
     };
-    render(
+    renderWithIntl(
       <Accordion type="single" collapsible defaultValue="delete-/api/test">
         <EndpointDetails endpoint={deleteMock} />
       </Accordion>
@@ -115,7 +117,7 @@ describe("EndpointDetails component documentation sections", (): void => {
       parameters: [],
     };
 
-    render(
+    renderWithIntl(
       <Accordion type="single" collapsible defaultValue="get-/api/empty">
         <EndpointDetails endpoint={emptyParamsMock} />
       </Accordion>

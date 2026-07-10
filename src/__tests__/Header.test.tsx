@@ -43,6 +43,31 @@ vi.mock(
   })
 );
 
+const HEADER_LABELS: Record<string, string> = {
+  about: "About",
+  history: "History",
+  signIn: "Sign in",
+  signUp: "Sign up",
+  signOut: "Sign out",
+};
+
+vi.mock(
+  "next-intl",
+  (): Record<string, unknown> => ({
+    useTranslations:
+      () =>
+      (key: string): string =>
+        HEADER_LABELS[key] ?? key,
+  })
+);
+
+vi.mock(
+  "@/components/i18n/LanguageToggle",
+  (): Record<string, unknown> => ({
+    default: (): ReactElement => <div data-testid="language-toggle" />,
+  })
+);
+
 const setScrollY = (value: number): void => {
   Object.defineProperty(window, "scrollY", {
     value,

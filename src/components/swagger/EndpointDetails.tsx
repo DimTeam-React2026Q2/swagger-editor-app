@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactElement } from "react";
+import { useTranslations } from "next-intl";
 import {
   EndpointData,
   EndpointParameter,
@@ -50,6 +51,7 @@ const getBadgeStyle = (method: string): string => {
 export function EndpointDetails({
   endpoint,
 }: EndpointDetailsProps): ReactElement {
+  const t = useTranslations("Viewer");
   return (
     <AccordionItem
       value={endpoint.id}
@@ -73,110 +75,114 @@ export function EndpointDetails({
         </div>
       </AccordionTrigger>
 
-      <AccordionContent className="space-y-6 border-t border-inherit bg-white p-4 text-zinc-700">
-        <div>
-          <h4 className="mb-2 text-xs font-bold tracking-wider text-zinc-800 uppercase">
-            Parameters
-          </h4>
-          {endpoint.parameters.length === 0 ? (
-            <p className="px-1 text-xs text-zinc-400 italic">
-              No parameters required for this operation.
-            </p>
-          ) : (
-            <div className="overflow-hidden rounded-md border border-zinc-100 text-xs">
-              <table className="w-full border-collapse text-left">
-                <thead>
-                  <tr className="border-b border-zinc-100 bg-zinc-50 font-semibold text-zinc-500">
-                    <th className="w-1/3 p-2">Name</th>
-                    <th className="w-1/4 p-2">Type</th>
-                    <th className="p-2">Location</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-50 font-mono">
-                  {endpoint.parameters.map(
-                    (param: EndpointParameter): ReactElement => (
-                      <tr key={param.name} className="hover:bg-zinc-50/50">
-                        <td className="p-2 font-semibold text-zinc-800">
-                          {param.name}
-                          {param.required && (
-                            <span className="ml-1 font-sans text-rose-500">
-                              * required
-                            </span>
-                          )}
-                        </td>
-                        <td className="p-2 text-zinc-600">
-                          {param.schema?.type || "string"}
-                        </td>
-                        <td className="p-2">
-                          <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] text-zinc-600">
-                            {param.in}
-                          </span>
-                        </td>
-                      </tr>
-                    )
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {endpoint.requestBodySchema && (
+      <AccordionContent className="border-t border-inherit bg-white text-zinc-700">
+        <div className="custom-scrollbar-light max-h-[70vh] space-y-6 overflow-y-auto p-4">
           <div>
             <h4 className="mb-2 text-xs font-bold tracking-wider text-zinc-800 uppercase">
-              Request Body
+              {t("parameters")}
             </h4>
-            <div className="max-h-48 overflow-x-auto rounded-md border border-zinc-100 bg-zinc-50 p-3 font-mono text-xs">
-              <pre className="text-zinc-600">
-                {JSON.stringify(endpoint.requestBodySchema, null, 2)}
-              </pre>
-            </div>
-          </div>
-        )}
-
-        <div>
-          <h4 className="mb-2 text-xs font-bold tracking-wider text-zinc-800 uppercase">
-            Responses
-          </h4>
-          <div className="space-y-2 text-xs">
-            {Object.entries(endpoint.responses).map(
-              ([code, resp]: [
-                string,
-                { description: string; schema?: JsonSchemaProperty },
-              ]): ReactElement => {
-                const isSuccess = code.startsWith("2");
-                return (
-                  <div
-                    key={code}
-                    className="rounded-md border border-zinc-100 bg-zinc-50/30 p-3"
-                  >
-                    <div className="mb-1 flex items-center space-x-2 font-mono">
-                      <span
-                        className={`font-bold ${isSuccess ? "text-emerald-600" : "text-rose-600"}`}
-                      >
-                        {code}
-                      </span>
-                      <span className="text-[11px] text-zinc-600">
-                        — {resp.description}
-                      </span>
-                    </div>
-                    {resp.schema && (
-                      <pre className="mt-2 max-h-32 overflow-x-auto rounded border border-zinc-100 bg-zinc-50 p-2 font-mono text-[11px] text-zinc-500">
-                        {JSON.stringify(resp.schema, null, 2)}
-                      </pre>
+            {endpoint.parameters.length === 0 ? (
+              <p className="px-1 text-xs text-zinc-400 italic">
+                {t("noParameters")}
+              </p>
+            ) : (
+              <div className="overflow-hidden rounded-md border border-zinc-100 text-xs">
+                <table className="w-full border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-zinc-100 bg-zinc-50 font-semibold text-zinc-500">
+                      <th className="w-1/3 p-2">{t("name")}</th>
+                      <th className="w-1/4 p-2">{t("type")}</th>
+                      <th className="p-2">{t("location")}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-50 font-mono">
+                    {endpoint.parameters.map(
+                      (param: EndpointParameter): ReactElement => (
+                        <tr key={param.name} className="hover:bg-zinc-50/50">
+                          <td className="p-2 font-semibold text-zinc-800">
+                            {param.name}
+                            {param.required && (
+                              <span className="ml-1 font-sans text-rose-500">
+                                {t("required")}
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-2 text-zinc-600">
+                            {param.schema?.type || "string"}
+                          </td>
+                          <td className="p-2">
+                            <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] text-zinc-600">
+                              {param.in}
+                            </span>
+                          </td>
+                        </tr>
+                      )
                     )}
-                  </div>
-                );
-              }
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
-        </div>
 
-        <div className="mt-4 border-t border-dashed border-zinc-200 pt-4">
-          <h4 className="mb-3 text-xs font-bold tracking-wider text-zinc-800 uppercase">
-            Try it out
-          </h4>
-          <TryItOutForm endpoint={endpoint} />
+          {endpoint.requestBodySchema && (
+            <div>
+              <h4 className="mb-2 text-xs font-bold tracking-wider text-zinc-800 uppercase">
+                {t("requestBody")}
+              </h4>
+              <div className="max-h-48 overflow-x-auto rounded-md border border-zinc-100 bg-zinc-50 p-3 font-mono text-xs">
+                <pre className="text-zinc-600">
+                  {JSON.stringify(endpoint.requestBodySchema, null, 2)}
+                </pre>
+              </div>
+            </div>
+          )}
+
+          <div>
+            <h4 className="mb-2 text-xs font-bold tracking-wider text-zinc-800 uppercase">
+              {t("responses")}
+            </h4>
+            <div className="space-y-2 text-xs">
+              {Object.entries(endpoint.responses).map(
+                ([code, resp]: [
+                  string,
+                  { description: string; schema?: JsonSchemaProperty },
+                ]): ReactElement => {
+                  const isSuccess = code.startsWith("2");
+                  return (
+                    <div
+                      key={code}
+                      className="rounded-md border border-zinc-100 bg-zinc-50/30 p-3"
+                    >
+                      <div className="mb-1 flex items-center space-x-2 font-mono">
+                        <span
+                          className={`font-bold ${isSuccess ? "text-emerald-600" : "text-rose-600"}`}
+                        >
+                          {code}
+                        </span>
+                        <span className="text-[11px] text-zinc-600">
+                          — {resp.description}
+                        </span>
+                      </div>
+                      {resp.schema && (
+                        <pre className="mt-2 max-h-32 overflow-x-auto rounded border border-zinc-100 bg-zinc-50 p-2 font-mono text-[11px] text-zinc-500">
+                          {JSON.stringify(resp.schema, null, 2)}
+                        </pre>
+                      )}
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          </div>
+
+          <div className="mt-4 border-t border-dashed border-zinc-200 pt-4">
+            <h4 className="mb-3 text-xs font-bold tracking-wider text-zinc-800 uppercase">
+              {t("tryItOut")}
+            </h4>
+            <div className="mt-6 w-full border-t border-dashed border-zinc-200 pt-6 text-left font-sans">
+              <TryItOutForm endpoint={endpoint} />
+            </div>
+          </div>
         </div>
       </AccordionContent>
     </AccordionItem>

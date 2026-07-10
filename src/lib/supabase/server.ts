@@ -3,10 +3,6 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { supabaseAnonKey, supabaseUrl } from "@/lib/supabase/config";
 
-/**
- * Server-side Supabase client. Reads/writes the session via Next.js cookies,
- * so Server Components and middleware can see the authenticated user.
- */
 export async function createClient(): Promise<SupabaseClient> {
   const cookieStore = await cookies();
 

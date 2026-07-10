@@ -21,6 +21,7 @@ import {
 import { convertSchema } from "@/lib/swagger/convert-schema";
 import { validateSchema } from "@/lib/swagger/validate-schema";
 import { saveSchema } from "@/lib/swagger/schema-storage";
+import { useTranslations } from "next-intl";
 
 const ACCEPTED_SCHEMA_EXTENSIONS = ".json,.yaml,.yml";
 
@@ -33,6 +34,7 @@ export default function SwaggerDashboard({
   initialSchema = "",
   isAuthenticated = false,
 }: SwaggerDashboardProps): ReactElement {
+  const t = useTranslations("Editor");
   const [schemaText, setSchemaText] = useState<string>(initialSchema);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -116,7 +118,7 @@ export default function SwaggerDashboard({
           <div className="flex h-full flex-col bg-[#1b1b1b] font-mono text-[#f8f8f2]">
             <div className="flex h-9 items-center justify-between border-b border-[#1a1a1a] bg-[#2d2d2d] px-4 select-none">
               <span className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
-                Swagger Editor // Live Code
+                {t("title")}
               </span>
               <div className="flex items-center gap-3">
                 {isAuthenticated && schemaText.trim() && (
@@ -129,12 +131,12 @@ export default function SwaggerDashboard({
                     className="rounded bg-emerald-600 px-2 py-0.5 text-[11px] font-semibold text-white transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {saveState === "saving"
-                      ? "Saving…"
+                      ? t("saving")
                       : saveState === "saved"
-                        ? "Saved!"
+                        ? t("saved")
                         : saveState === "error"
-                          ? "Error"
-                          : "Save"}
+                          ? t("error")
+                          : t("save")}
                   </button>
                 )}
                 {schemaText.trim() && (
@@ -171,7 +173,7 @@ export default function SwaggerDashboard({
                     onClick={handleUploadClick}
                     className="text-xs text-zinc-400 hover:text-zinc-200"
                   >
-                    Upload JSON/YAML file
+                    {t("uploadFile")}
                   </button>
                 </div>
               </div>
@@ -185,7 +187,7 @@ export default function SwaggerDashboard({
               )}
               <textarea
                 className="custom-scrollbar h-full w-full resize-none bg-[#1b1b1b] p-3 font-mono text-[13px] leading-relaxed text-zinc-100 placeholder:text-zinc-600 focus:outline-none"
-                placeholder="Paste scheme here..."
+                placeholder={t("placeholder")}
                 value={schemaText}
                 onChange={(e) => {
                   setSchemaText(e.target.value);
@@ -198,13 +200,13 @@ export default function SwaggerDashboard({
             <div className="flex h-7 items-center gap-2 border-t border-[#1a1a1a] bg-[#2d2d2d] px-4 select-none">
               {validation.status === "empty" && (
                 <span className="text-[11px] text-zinc-500">
-                  Waiting for schema…
+                  {t("waiting")}
                 </span>
               )}
               {validation.status === "valid" && (
                 <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400">
                   <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  Valid schema
+                  {t("valid")}
                 </span>
               )}
               {validation.status === "invalid" && (
@@ -226,7 +228,7 @@ export default function SwaggerDashboard({
           <div className="flex h-full flex-col bg-white text-zinc-900">
             <div className="flex h-9 items-center border-b border-zinc-200 bg-zinc-50 px-4 select-none">
               <span className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-                Swagger UI // API Documentation
+                {t("viewerTitle")}
               </span>
             </div>
 
@@ -247,10 +249,7 @@ export default function SwaggerDashboard({
                 </div>
               ) : (
                 <div className="flex h-full flex-col items-center justify-center p-8 text-center select-none">
-                  <p className="text-xs text-zinc-400">
-                    The Viewer will automatically populate when schema is
-                    provided.
-                  </p>
+                  <p className="text-xs text-zinc-400">{t("viewerEmpty")}</p>
                 </div>
               )}
             </div>

@@ -42,5 +42,63 @@
       },
       "githubLabel": "GitHub Profile"
     }
+  },
+  "Header": {
+    "about": "About",
+    "history": "History",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out"
+  },
+  "Editor": {
+    "title": "Swagger Editor // Live Code",
+    "viewerTitle": "Swagger UI // API Documentation",
+    "uploadFile": "Upload JSON/YAML file",
+    "placeholder": "Paste scheme here...",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved!",
+    "error": "Error",
+    "waiting": "Waiting for schema…",
+    "valid": "Valid schema",
+    "viewerEmpty": "The Viewer will automatically populate when schema is provided."
+  },
+  "Viewer": {
+    "parameters": "Parameters",
+    "noParameters": "No parameters required for this operation.",
+    "name": "Name",
+    "type": "Type",
+    "location": "Location",
+    "required": "* required",
+    "requestBody": "Request Body",
+    "responses": "Responses",
+    "tryItOut": "Try it out"
+  },
+  "TryItOut": {
+    "baseUrl": "Base URL",
+    "requestBodyJson": "Request Body (JSON)",
+    "execute": "Execute",
+    "executing": "Executing...",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "response": "Response",
+    "headers": "Headers",
+    "body": "Body"
+  },
+  "History": {
+    "title": "History & Analytics",
+    "recorded": "{count} requests recorded, most recent first.",
+    "recordedPlaceholder": "Your executed requests will be recorded here.",
+    "emptyTitle": "No requests yet",
+    "emptyText": "Execute a request from the Try-It-Out client and it will appear here with full analytics.",
+    "goToEditor": "Go to Editor",
+    "openViewer": "Open Viewer",
+    "method": "Method",
+    "endpointUrl": "Endpoint / URL",
+    "status": "Status",
+    "duration": "Duration",
+    "req": "Req",
+    "resp": "Resp",
+    "when": "When"
   }
 }

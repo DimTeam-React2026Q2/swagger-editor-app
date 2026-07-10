@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import { renderWithIntl } from "@/test/render-with-intl";
 import React, { ReactElement } from "react";
 import Footer from "@/ui/footer";
 
@@ -27,7 +28,7 @@ vi.mock(
 
 describe("Footer component", (): void => {
   it("should render About link pointing to the about page", (): void => {
-    render(<Footer />);
+    renderWithIntl(<Footer />);
 
     expect(screen.getByRole(LINK, { name: "About" })).toHaveAttribute(
       "href",
@@ -36,7 +37,7 @@ describe("Footer component", (): void => {
   });
 
   it("should render as a centered footer with app styling", (): void => {
-    render(<Footer />);
+    renderWithIntl(<Footer />);
 
     const footer = screen.getByRole(CONTENTINFO);
     expect(footer).toHaveClass(
