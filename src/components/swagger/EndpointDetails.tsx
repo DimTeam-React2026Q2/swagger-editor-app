@@ -176,7 +176,9 @@ export function EndpointDetails({
           <h4 className="mb-3 text-xs font-bold tracking-wider text-zinc-800 uppercase">
             Try it out
           </h4>
-          <TryItOutForm endpoint={endpoint} />
+          <div className="mt-6 w-full border-t border-dashed border-zinc-200 pt-6 text-left font-sans">
+            <TryItOutForm endpoint={endpoint} />
+          </div>
         </div>
       </AccordionContent>
     </AccordionItem>
