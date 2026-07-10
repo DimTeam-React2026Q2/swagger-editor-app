@@ -20,17 +20,17 @@ const TEAM_MEMBERS: TeamMember[] = [
   {
     nameKey: "team.marina.name",
     roleKey: "team.marina.role",
-    githubUrl: "https://github.com",
+    githubUrl: "https://github.com/dromari",
   },
   {
     nameKey: "team.mark.name",
     roleKey: "team.mark.role",
-    githubUrl: "https://github.com",
+    githubUrl: "https://github.com/mark-pribylnov",
   },
   {
     nameKey: "team.dima.name",
     roleKey: "team.dima.role",
-    githubUrl: "https://github.com",
+    githubUrl: "https://github.com/karpovdmitriy",
   },
 ];
 
