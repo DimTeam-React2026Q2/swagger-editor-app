@@ -1,0 +1,104 @@
+{
+  "Auth": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "createAccount": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "needAccount": "Need an account?",
+    "haveAccount": "Already have an account?",
+    "pleaseWait": "Please wait...",
+    "errors": {
+      "invalidEmail": "Enter a valid email address",
+      "passwordMin": "Password must be at least 8 characters",
+      "passwordLetter": "Password must contain at least one letter",
+      "passwordDigit": "Password must contain at least one digit",
+      "passwordSpecial": "Password must contain at least one special character"
+    }
+  },
+  "About": {
+    "title": "About Our Team",
+    "description": "Welcome to our Swagger Client application page. This project was built by dedicated students during the React course.",
+    "course": {
+      "title": "RS School React Course",
+      "description": "The Rolling Scopes School is a free, community-driven educational initiative. This application serves as a final project demonstrating skills in Next.js, TypeScript, and modern frontend architecture.",
+      "descriptionSecondary": "The RS School React course is a free, comprehensive online training program designed for students with solid foundational skills in Core JavaScript, TypeScript, HTML5, and CSS3. The curriculum covers everything from initial project setup and testing fundamentals to modern state management, data fetching, performance optimization, and Next.js. All study materials are fully open and publicly available on GitHub and YouTube.",
+      "linkLabel": "Learn more about RS School"
+    },
+    "team": {
+      "title": "Meet the Developers",
+      "marina": {
+        "name": "Maryna (Team Lead)",
+        "role": "Core Architecture, OpenAPI Parser & Documentation Viewer"
+      },
+      "mark": {
+        "name": "Mark",
+        "role": "Sticky App Header, Auth Pages & Swagger Editor Loader"
+      },
+      "dima": {
+        "name": "Dima",
+        "role": "Supabase Integration, REST Client & Requests History"
+      },
+      "githubLabel": "GitHub Profile"
+    }
+  },
+  "Header": {
+    "about": "About",
+    "history": "History",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out"
+  },
+  "Editor": {
+    "title": "Swagger Editor // Live Code",
+    "viewerTitle": "Swagger UI // API Documentation",
+    "uploadFile": "Upload JSON/YAML file",
+    "placeholder": "Paste scheme here...",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved!",
+    "error": "Error",
+    "waiting": "Waiting for schema…",
+    "valid": "Valid schema",
+    "viewerEmpty": "The Viewer will automatically populate when schema is provided."
+  },
+  "Viewer": {
+    "parameters": "Parameters",
+    "noParameters": "No parameters required for this operation.",
+    "name": "Name",
+    "type": "Type",
+    "location": "Location",
+    "required": "* required",
+    "requestBody": "Request Body",
+    "responses": "Responses",
+    "tryItOut": "Try it out"
+  },
+  "TryItOut": {
+    "baseUrl": "Base URL",
+    "requestBodyJson": "Request Body (JSON)",
+    "execute": "Execute",
+    "executing": "Executing...",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "response": "Response",
+    "headers": "Headers",
+    "body": "Body"
+  },
+  "History": {
+    "title": "History & Analytics",
+    "recorded": "{count} requests recorded, most recent first.",
+    "recordedPlaceholder": "Your executed requests will be recorded here.",
+    "emptyTitle": "No requests yet",
+    "emptyText": "Execute a request from the Try-It-Out client and it will appear here with full analytics.",
+    "goToEditor": "Go to Editor",
+    "openViewer": "Open Viewer",
+    "method": "Method",
+    "endpointUrl": "Endpoint / URL",
+    "status": "Status",
+    "duration": "Duration",
+    "req": "Req",
+    "resp": "Resp",
+    "when": "When"
+  }
+}
